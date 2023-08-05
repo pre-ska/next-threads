@@ -3,16 +3,23 @@ import { redirect } from "next/navigation";
 
 // import { fetchUser } from "@/lib/actions/user.actions";
 import AccountProfile from "@/components/forms/AccountProfile";
-import { log } from "console";
-
+import { fetchUser } from "@/lib/actions/user.actions";
+ 
 async function Page() {
+  // dohvati trenutnog usera iz Clerk auth
   const user = await currentUser();
   if (!user) return null; // to avoid typescript warnings
-  const userInfo = null
-//   const userInfo = await fetchUser(user.id);
-//   if (userInfo?.onboarded) redirect("/");
-console.log(user);
+ 
+   // dohvati usera iz mongoDB po IDju iz clerka
+  const userInfo = await fetchUser(user.id);
 
+  // ako je prošao onboard - redirect
+  if (userInfo?.onboarded) redirect("/"); 
+ 
+  // ako nije -prikaži onboard 
+
+  // podaci  koji će inicijalno popunit UI - AccountProfile komponenta
+  // userInfo je iz mongoDB, user je iz Clerk auth
   const userData = {
     id: user.id ,
     objectId:  userInfo?._id  ,

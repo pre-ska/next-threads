@@ -23,7 +23,7 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { isBase64Image } from "@/lib/utils";
 
 import { UserValidation } from "@/lib/validations/user";
-// import { updateUser } from "@/lib/actions/user.actions";
+import { updateUser } from "@/lib/actions/user.actions";
 
 interface Props {
   user: {
@@ -38,12 +38,14 @@ interface Props {
 }
 
 const AccountProfile = ({ user, btnTitle }: Props) => {
-  const router = useRouter();
-  const pathname = usePathname();
+  const router = useRouter(); // za navigavat...kao sitory.push
+  const pathname = usePathname(); // za znat koja je ruta
   const { startUpload } = useUploadThing("media");
 
+  // state za sliku koju je user uploadao
   const [files, setFiles] = useState<File[]>([]);
 
+  // form schema za popunit inicijalno i validaciju
   const form = useForm<z.infer<typeof UserValidation>>({
     resolver: zodResolver(UserValidation),
     defaultValues: {
@@ -54,10 +56,14 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     },
   });
 
+  // submit novi info o useru - na mongoDB
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
+
     const blob = values.profile_photo;
 
     const hasImageChanged = isBase64Image(blob);
+
+    // ako je promjenjena slika (ako je base64)- uplodaj je
     if (hasImageChanged) {
       const imgRes = await startUpload(files);
 
@@ -66,22 +72,26 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
       }
     }
 
-    // await updateUser({
-    //   name: values.name,
-    //   path: pathname,
-    //   username: values.username,
-    //   userId: user.id,
-    //   bio: values.bio,
-    //   image: values.profile_photo,
-    // });
+    // update user funkcija  - novi način sa server funkcijama
+    await updateUser({
+      name: values.name,
+      path: pathname,
+      username: values.username,
+      userId: user.id,
+      bio: values.bio,
+      image: values.profile_photo,
+    });
 
-    // if (pathname === "/profile/edit") {
-    //   router.back();
-    // } else {
-    //   router.push("/");
-    // }
+    // šta nakon updejta - ako je prvi put -> home, ako je edit profile -> back
+    if (pathname === "/profile/edit") {
+      router.back();
+    } else {
+      router.push("/");
+    }
   };
 
+
+  // user profile image upload and save in state
   const handleImage = (
     e: ChangeEvent<HTMLInputElement>,
     fieldChange: (value: string) => void
