@@ -8,6 +8,7 @@ import User from "../models/user.model";
 import Thread from "../models/thread.model";
 import Community from "../models/community.model";
 
+/****************************************************** */
 export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   connectToDB();
 
@@ -55,6 +56,7 @@ interface Params {
   path: string,
 }
 
+/*******************************************************/
 export async function createThread({ text, author, communityId, path }: Params
 ) {
   try {
@@ -89,6 +91,7 @@ export async function createThread({ text, author, communityId, path }: Params
   }
 }
 
+/*******************************************************/
 async function fetchAllChildThreads(threadId: string): Promise<any[]> {
   const childThreads = await Thread.find({ parentId: threadId });
 
@@ -157,6 +160,7 @@ export async function deleteThread(id: string, path: string): Promise<void> {
   }
 }
 
+/*******************************************************/
 export async function fetchThreadById(threadId: string) {
   connectToDB();
 
@@ -200,6 +204,7 @@ export async function fetchThreadById(threadId: string) {
   }
 }
 
+/*******************************************************/
 export async function addCommentToThread(
   threadId: string,
   commentText: string,
