@@ -44,7 +44,7 @@ export const POST = async (request: Request) => {
     "svix-signature": header.get("svix-signature"),
   };
 
-  // Activita Webhook in the Clerk Dashboard.
+  // Activate Webhook in the Clerk Dashboard.
   // After adding the endpoint, you'll see the secret on the right side.
   const wh = new Webhook(process.env.NEXT_CLERK_WEBHOOK_SECRET || "");
 
@@ -67,7 +67,7 @@ export const POST = async (request: Request) => {
     // Show what evnt?.data sends from above resource
     const { id, name, slug, logo_url, image_url, created_by } =
       evnt?.data ?? {};
-
+console.log('stigli podaci o organizaciji sa clerka', { id, name, slug, logo_url, image_url, created_by })
     try {
       // @ts-ignore
       await createCommunity(
@@ -80,7 +80,7 @@ export const POST = async (request: Request) => {
         created_by
       );
 
-      return NextResponse.json({ message: "User created" }, { status: 201 });
+      return NextResponse.json({ message: "Community created" }, { status: 201 });
     } catch (err) {
       console.log(err);
       return NextResponse.json(
