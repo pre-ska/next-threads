@@ -67,7 +67,7 @@ export const POST = async (request: Request) => {
     // Show what evnt?.data sends from above resource
     const { id, name, slug, logo_url, image_url, created_by } =
       evnt?.data ?? {};
-console.log('stigli podaci o organizaciji sa clerka', { id, name, slug, logo_url, image_url, created_by })
+console.log('stigli podaci o novoj organizaciji sa clerka', { id, name, slug, logo_url, image_url, created_by })
     try {
       // @ts-ignore
       await createCommunity(
