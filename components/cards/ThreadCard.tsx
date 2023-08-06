@@ -41,7 +41,6 @@ function ThreadCard({
   isComment,
   lastItem
 }: Props) {
-  console.log('last item', lastItem)
   return (
     <article
       className={`flex w-full flex-col rounded-xl ${

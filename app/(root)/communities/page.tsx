@@ -1,5 +1,5 @@
-import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+// import { currentUser } from "@clerk/nextjs";
+// import { redirect } from "next/navigation";
 
 // import Searchbar from "@/components/shared/Searchbar";
 // import Pagination from "@/components/shared/Pagination";
@@ -13,25 +13,25 @@ async function Page({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) {
-  const user = await currentUser();
-  if (!user) return null;
+//   const user = await currentUser();
+//   if (!user) return null;
 
-  const userInfo = await fetchUser(user.id);
-  if (!userInfo?.onboarded) redirect("/onboarding");
+//   const userInfo = await fetchUser(user.id);
+//   if (!userInfo?.onboarded) redirect("/onboarding");
 
-  const result = await fetchCommunities({
-    searchString: searchParams.q,
-    pageNumber: searchParams?.page ? +searchParams.page : 1,
-    pageSize: 25,
-  });
+//   const result = await fetchCommunities({
+//     searchString: searchParams.q,
+//     pageNumber: searchParams?.page ? +searchParams.page : 1,
+//     pageSize: 25,
+//   });
 
   return (
     <>
       <h1 className='head-text'>Communities</h1>
 
-      <div className='mt-5'>
-        <h1>searchbar</h1>
-        {/* <Searchbar routeType='communities' /> */}
+      {/* <div className='mt-5'>
+ 
+        <Searchbar routeType='communities' />
       </div>
 
       <section className='mt-9 flex flex-wrap gap-4'>
@@ -40,20 +40,20 @@ async function Page({
         ) : (
           <>
             {result.communities.map((community) => (
-                <h1>{community.name}</h1>
-            //   <CommunityCard
-            //     key={community.id}
-            //     id={community.id}
-            //     name={community.name}
-            //     username={community.username}
-            //     imgUrl={community.image}
-            //     bio={community.bio}
-            //     members={community.members}
-            //   />
+     
+              <CommunityCard
+                key={community.id}
+                id={community.id}
+                name={community.name}
+                username={community.username}
+                imgUrl={community.image}
+                bio={community.bio}
+                members={community.members}
+              />
             ))}
           </>
         )}
-      </section>
+      </section> */}
 
       {/* <Pagination
         path='communities'
