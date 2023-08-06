@@ -166,22 +166,25 @@ export async function getActivity(userId: string) {
   try {
     connectToDB();
 
-    // Find all threads created by the user
+    // svi threadovi od trnutnog korisnika
     const userThreads = await Thread.find({ author: userId });
 
-    // Collect all the child thread ids (replies) from the 'children' field of each user thread
+    // dohvati sve odgovore za svaki pojedini post /thread
+    // to je pod children prop u svakom postu
+    // dobijem niz postova kao rezultat
     const childThreadIds = userThreads.reduce((acc, userThread) => {
       return acc.concat(userThread.children);
     }, []);
 
-    // Find and return the child threads (replies) excluding the ones created by the same user
+    // dohvati sve postove/threadove po nizu iz prethodne funkcije
+    // samo exludaj postove trnutnog korisnika
     const replies = await Thread.find({
-      _id: { $in: childThreadIds },
-      author: { $ne: userId }, // Exclude threads authored by the same user
+      _id: { $in: childThreadIds }, // svi postovi iz prethodnog niza
+      author: { $ne: userId }, // ne od trenutnog korisnika
     }).populate({
-      path: "author",
-      model: User,
-      select: "name image _id",
+      path: "author", // popuni author field
+      model: User, // po čvoru iz User kolekcije
+      select: "name image _id", // ono šta želim da mi se popuni za svakog autora
     });
 
     return replies;
