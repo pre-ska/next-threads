@@ -32,19 +32,20 @@ async function page({ params }: { params: { id: string } }) {
           community={thread.community}
           createdAt={thread.createdAt}
           comments={thread.children}
+        
         />
       </div>
 
       <div className='mt-7'>
         <Comment
           threadId={params.id}
-          currentUserImg={user.imageUrl}
+          currentUserImg={userInfo.image}
           currentUserId={JSON.stringify(userInfo._id)}
         />
       </div>
 
       <div className='mt-10'>
-        {thread.children.map((childItem: any) => (
+        {thread.children.map((childItem: any, index: number) => (
           <ThreadCard
             key={childItem._id}
             id={childItem._id}
@@ -56,6 +57,7 @@ async function page({ params }: { params: { id: string } }) {
             createdAt={childItem.createdAt}
             comments={childItem.children}
             isComment
+            lastItem={thread.children.length - 1 === index}
           />
         ))}
       </div>

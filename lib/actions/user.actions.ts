@@ -9,6 +9,7 @@ import User from "../models/user.model";
 
 import { connectToDB } from "../mongoose";
 
+/*******************************************************/
 export async function fetchUser(userId: string) {
   try {
     connectToDB();
@@ -62,6 +63,7 @@ export async function updateUser({
   }
 }
 
+/*******************************************************/
 export async function fetchUserPosts(userId: string) {
   try {
     connectToDB();
@@ -94,6 +96,7 @@ export async function fetchUserPosts(userId: string) {
   }
 }
 
+/*******************************************************/
 // Almost similar to Thead (search + pagination) and Community (search + pagination)
 export async function fetchUsers({
   userId,
@@ -117,12 +120,15 @@ export async function fetchUsers({
     // Create a case-insensitive regular expression for the provided search string.
     const regex = new RegExp(searchString, "i");
 
-    // Create an initial query object to filter users.
+    // Osnovni query objekt
+    // ! FilterQuery type dolazi iz mongoose
+    // ! izbaci korisnika koji pretraživa da ne bude u rezultatima - not equal
     const query: FilterQuery<typeof User> = {
-      id: { $ne: userId }, // Exclude the current user from the results.
+      id: { $ne: userId },
     };
 
-    // If the search string is not empty, add the $or operator to match either username or name fields.
+    // ako postoji search, traži po name i username - $or
+    // a ako ne postoji, onda vrati sve korisnike - po paginaciji
     if (searchString.trim() !== "") {
       query.$or = [
         { username: { $regex: regex } },
@@ -130,20 +136,22 @@ export async function fetchUsers({
       ];
     }
 
-    // Define the sort options for the fetched users based on createdAt field and provided sort order.
+    //  sortiranje uvijek po createdAt.... order je dinamički
     const sortOptions = { createdAt: sortBy };
 
+    // ! finalni query
     const usersQuery = User.find(query)
       .sort(sortOptions)
       .skip(skipAmount)
       .limit(pageSize);
 
-    // Count the total number of users that match the search criteria (without pagination).
+    // ukupni broj rezultata bez paginacije
     const totalUsersCount = await User.countDocuments(query);
 
+    // ! exec finalni query
     const users = await usersQuery.exec();
 
-    // Check if there are more users beyond the current page.
+    // dali postoji više korisnika od trenutne paginacije
     const isNext = totalUsersCount > skipAmount + users.length;
 
     return { users, isNext };
@@ -153,6 +161,7 @@ export async function fetchUsers({
   }
 }
 
+/*******************************************************/
 export async function getActivity(userId: string) {
   try {
     connectToDB();

@@ -54,7 +54,7 @@ result = await fetchUserPosts(accountId);
 
   return (
     <section className='mt-9 flex flex-col gap-10'>
-      {result.threads.map((thread) => (
+      {result.threads.map((thread, index) => (
         <ThreadCard
           key={thread._id}
           id={thread._id}
@@ -77,6 +77,7 @@ result = await fetchUserPosts(accountId);
           }
           createdAt={thread.createdAt}
           comments={thread.children}
+          lastItem={result.threads.length - 1 === index}
         />
       ))}
     </section>
